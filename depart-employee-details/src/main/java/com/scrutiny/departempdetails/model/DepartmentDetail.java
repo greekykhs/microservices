@@ -7,7 +7,7 @@ public class DepartmentDetail {
 	private int departmentId;
 	private String departmentName;	
 	List<EmployeeDetail> employees=new ArrayList<>();
-	
+	public DepartmentDetail() {}
 	public DepartmentDetail(int departmentId, String departmentName) {
 		super();
 		this.departmentId = departmentId;

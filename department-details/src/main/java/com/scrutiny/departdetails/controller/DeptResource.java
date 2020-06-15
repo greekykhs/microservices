@@ -11,8 +11,7 @@ public class DeptResource {
 	@RequestMapping("/getDepartmentDetails")
 	public DepartmentResponse getDetails(){
 		return getDepartments();
-	}
-	
+	}	
 	public DepartmentResponse getDepartments() {
 		DepartmentDetail dd1 = new DepartmentDetail(1, "HR");
 		DepartmentDetail dd2 = new DepartmentDetail(2, "Marketing");

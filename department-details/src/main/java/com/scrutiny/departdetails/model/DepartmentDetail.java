@@ -2,7 +2,8 @@ package com.scrutiny.departdetails.model;
 
 public class DepartmentDetail {
 	private int departmentId;
-	private String departmentName;	
+	private String departmentName;
+	public DepartmentDetail() {}
 	public DepartmentDetail(int departmentId, String departmentName) {
 		super();
 		this.departmentId = departmentId;

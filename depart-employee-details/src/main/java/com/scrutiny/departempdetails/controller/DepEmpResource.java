@@ -6,35 +6,40 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
 import com.scrutiny.departempdetails.model.DepartmentDetail;
+import com.scrutiny.departempdetails.model.DepartmentResponse;
 import com.scrutiny.departempdetails.model.DetailedResponse;
 import com.scrutiny.departempdetails.model.EmployeeDetail;
+import com.scrutiny.departempdetails.model.EmployeeResponse;
 
 @RestController
 @RequestMapping("/details")
 public class DepEmpResource {
+	@Autowired
+	RestTemplate restTemplate;
+	
 	@RequestMapping("/getDetails")
 	public DetailedResponse getDetails(){
-		//get all the departments
-		List<EmployeeDetail> employeeDetails=new ArrayList<EmployeeDetail>();
-		EmployeeDetail e1 = new EmployeeDetail(1, "Colean");
-		EmployeeDetail e2 = new EmployeeDetail(2, "Richard");
+		String departURL="http://localhost:8082/department/getDepartmentDetails";
+		String employeeURL="http://localhost:8083/employee/getemployeeDetails/1";
 		
-		employeeDetails.add(e1);
-		employeeDetails.add(e2);		
-		//get list of employees working in each department	
+		DetailedResponse detailedResponse=new DetailedResponse();
+		EmployeeResponse employeeResponse;
 		
-
+		DepartmentResponse departmentResponse=restTemplate.getForObject(departURL,DepartmentResponse.class);
+		List<DepartmentDetail> departmentDetails=departmentResponse.getDepartmentDetails();
+		for(DepartmentDetail departmentDetail:departmentDetails) {
+			//for each department fetch the employees
+			employeeResponse=restTemplate.getForObject(employeeURL,EmployeeResponse.class);
+			departmentDetail.setEmployees(employeeResponse.getEmployeeDetails());
+		}
+		detailedResponse.setDepartmentDetails(departmentDetails);		
 		
-		//put them together
-		DetailedResponse detailedResponse=new DetailedResponse();		
-		List<DepartmentDetail> departmentDetails = employeeDetails.stream()
-				.map(depart -> 
-				new DepartmentDetail(1, "HR", Collections.singletonList(new EmployeeDetail(1, "Colean"))))
-				.collect(Collectors.toList());
-		detailedResponse.setDepartmentDetails(departmentDetails);
 		return detailedResponse;
 	}
 	

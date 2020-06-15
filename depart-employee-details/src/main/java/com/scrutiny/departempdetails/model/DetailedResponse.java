@@ -5,6 +5,7 @@ import java.util.List;
 
 public class DetailedResponse {
 	List<DepartmentDetail> departmentDetails=new ArrayList<DepartmentDetail>();
+	public DetailedResponse() {}
 	public List<DepartmentDetail> getDepartmentDetails() {
 		return departmentDetails;
 	}

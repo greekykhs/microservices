@@ -7,6 +7,7 @@ public class EmployeeResponse {
 	private int departmentId;
 	List<EmployeeDetail> employeeDetails=new ArrayList<EmployeeDetail>();	
 	
+	public EmployeeResponse() {}
 	public int getDepartmentId() {
 		return departmentId;
 	}
