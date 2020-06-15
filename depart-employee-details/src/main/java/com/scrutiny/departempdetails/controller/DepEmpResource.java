@@ -25,8 +25,10 @@ public class DepEmpResource {
 	
 	@RequestMapping("/getDetails")
 	public DetailedResponse getDetails(){
-		String departURL="http://localhost:8082/department/getDepartmentDetails";
-		String employeeURL="http://localhost:8083/employee/getemployeeDetails/1";
+//		String departURL="http://localhost:8082/department/getDepartmentDetails";
+//		String employeeURL="http://localhost:8083/employee/getemployeeDetails/1";
+		String departURL="http://department-details/department/getDepartmentDetails";
+		String employeeURL="http://employee-details/employee/getemployeeDetails/1";
 		
 		DetailedResponse detailedResponse=new DetailedResponse();
 		EmployeeResponse employeeResponse;
