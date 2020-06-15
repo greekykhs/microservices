@@ -17,7 +17,25 @@ import com.scrutiny.departempdetails.model.EmployeeDetail;
 public class DepEmpResource {
 	@RequestMapping("/getDetails")
 	public DetailedResponse getDetails(){
-		return getHarcodedDetails();
+		//get all the departments
+		List<EmployeeDetail> employeeDetails=new ArrayList<EmployeeDetail>();
+		EmployeeDetail e1 = new EmployeeDetail(1, "Colean");
+		EmployeeDetail e2 = new EmployeeDetail(2, "Richard");
+		
+		employeeDetails.add(e1);
+		employeeDetails.add(e2);		
+		//get list of employees working in each department	
+		
+
+		
+		//put them together
+		DetailedResponse detailedResponse=new DetailedResponse();		
+		List<DepartmentDetail> departmentDetails = employeeDetails.stream()
+				.map(depart -> 
+				new DepartmentDetail(1, "HR", Collections.singletonList(new EmployeeDetail(1, "Colean"))))
+				.collect(Collectors.toList());
+		detailedResponse.setDepartmentDetails(departmentDetails);
+		return detailedResponse;
 	}
 	
 	public DetailedResponse getHarcodedDetails() {
