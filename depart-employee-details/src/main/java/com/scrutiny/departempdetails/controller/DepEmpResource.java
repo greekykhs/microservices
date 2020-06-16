@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.scrutiny.departempdetails.model.DepartmentDetail;
 import com.scrutiny.departempdetails.model.DepartmentResponse;
 import com.scrutiny.departempdetails.model.DetailedResponse;
@@ -21,9 +22,9 @@ import com.scrutiny.departempdetails.model.EmployeeResponse;
 @RequestMapping("/details")
 public class DepEmpResource {
 	@Autowired
-	RestTemplate restTemplate;
-	
+	RestTemplate restTemplate;	
 	@RequestMapping("/getDetails")
+	@HystrixCommand(fallbackMethod = "fallbackgetDetails")
 	public DetailedResponse getDetails(){
 //		String departURL="http://localhost:8082/department/getDepartmentDetails";
 //		String employeeURL="http://localhost:8083/employee/getemployeeDetails/1";
@@ -40,12 +41,12 @@ public class DepEmpResource {
 			employeeResponse=restTemplate.getForObject(employeeURL,EmployeeResponse.class);
 			departmentDetail.setEmployees(employeeResponse.getEmployeeDetails());
 		}
-		detailedResponse.setDepartmentDetails(departmentDetails);		
+		detailedResponse.setDepartmentDetails(departmentDetails);	
 		
 		return detailedResponse;
 	}
 	
-	public DetailedResponse getHarcodedDetails() {
+	public DetailedResponse fallbackgetDetails() {
 		DepartmentDetail dd1 = new DepartmentDetail(1, "HR", 
 				Collections.singletonList(new EmployeeDetail(1, "Colean")));
 		DepartmentDetail dd2 = new DepartmentDetail(2, "Marketing", 
