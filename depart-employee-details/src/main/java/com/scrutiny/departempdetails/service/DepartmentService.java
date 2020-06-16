@@ -14,12 +14,32 @@ import com.scrutiny.departempdetails.model.EmployeeDetail;
 public class DepartmentService {
 	@Autowired
 	RestTemplate restTemplate;
-
+	/*
 	@HystrixCommand(fallbackMethod = "fallbackGetDepartmentDetails", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "110"),
 	        @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
 	        @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "20"), 
 	        @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000") })
+	*/
+	
+	/*
+	@HystrixCommand(fallbackMethod = "fallbackGetDepartmentDetails",
+			commandProperties = {
+			@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")
+		})
+	*/		
+	@HystrixCommand(fallbackMethod = "fallbackGetDepartmentDetails", 
+			threadPoolKey = "threadPoolDepartmentDetails", 
+			threadPoolProperties = {
+			@HystrixProperty(name = "coreSize", value = "15"), 
+			@HystrixProperty(name = "maxQueueSize", value = "5") },
+			commandProperties = { 
+					@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+					@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "75"),
+					@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "7000"),
+					@HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "15000"),
+					@HystrixProperty(name = "metrics.rollingStats.numBuckets", value = "5") }
+			)
 	public DepartmentResponse getDepartmentDetails(String departURL) {
 		return restTemplate.getForObject(departURL, DepartmentResponse.class);
 	}
